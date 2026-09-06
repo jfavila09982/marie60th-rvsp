@@ -1,5 +1,5 @@
 const SHEET_NAME = 'Sheet1';
-const HEADERS = ['Timestamp', 'Name', 'Attending', 'Party Size', 'Family Members'];
+const HEADERS = ['Timestamp', 'Name', 'Attending', 'Party Size', 'Family Members', 'Notes'];
 
 function setup() {
   const sheet = getResponseSheet_();
@@ -23,7 +23,8 @@ function doGet(event) {
           name: row[1],
           attending: row[2],
           partySize: Number(row[3]) || 0,
-          familyNames: row[4]
+          familyNames: row[4],
+          notes: row[5] || ''
         };
       })
       .reverse();
@@ -43,11 +44,12 @@ function doPost(event) {
     const attending = params.attending === 'yes' ? 'yes' : params.attending === 'no' ? 'no' : '';
     const partySize = attending === 'yes' ? Math.min(Math.max(Number(params.partySize) || 1, 1), 20) : 0;
     const familyNames = attending === 'yes' ? clean_(params.familyNames, 500) : '';
+    const notes = clean_(params.notes, 1000);
 
     if (!name) throw new Error('A guest name is required.');
     if (!attending) throw new Error('Attendance selection is required.');
 
-    getResponseSheet_().appendRow([new Date(), name, attending, partySize, familyNames]);
+    getResponseSheet_().appendRow([new Date(), name, attending, partySize, familyNames, notes]);
     return json_({ ok: true });
   } catch (error) {
     return json_({ ok: false, error: error.message });
@@ -67,6 +69,8 @@ function getResponseSheet_() {
     sheet.appendRow(HEADERS);
     sheet.getRange(1, 1, 1, HEADERS.length).setFontWeight('bold');
     sheet.setFrozenRows(1);
+  } else if (sheet.getRange(1, 6).getDisplayValue() !== HEADERS[5]) {
+    sheet.getRange(1, 6).setValue(HEADERS[5]).setFontWeight('bold');
   }
   return sheet;
 }

@@ -551,6 +551,7 @@
   const apiConnected = SHEETS_API_URL.startsWith('https://script.google.com/macros/s/');
   const form = document.getElementById('rsvp-form');
   const nameInput = document.getElementById('guest-name');
+  const notesInput = document.getElementById('special-notes');
   const attendBtns = document.querySelectorAll('.attend-btn');
   const guestsField = document.getElementById('guests-field');
   const guestFields = document.getElementById('guest-fields');
@@ -778,6 +779,7 @@
       attending,
       partySize: attending === 'yes' ? 1 + [...document.querySelectorAll('.guest-name-input')].filter(input=>input.value.trim()).length : 0,
       familyNames: attending === 'yes' ? [...document.querySelectorAll('.guest-name-input')].map(input=>input.value.trim()).filter(Boolean).join(', ') : '',
+      notes: notesInput.value.trim(),
       timestamp: Date.now()
     };
 
