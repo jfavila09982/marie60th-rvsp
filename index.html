@@ -92,31 +92,53 @@
   .detail-chip .label{ display:flex; flex-direction:column; line-height:1.25; }
   .detail-chip .label small{ font-family:var(--font-ui); font-weight:700; font-size:10px; color:#8a7a94; text-transform:uppercase; letter-spacing:0.08em; }
   .rsvp-aside .details-row{
-    display:grid; grid-template-columns:repeat(2, minmax(0, 1fr)); gap:8px;
-    width:100%; margin:30px 0 auto; padding:22px 0 0; max-width:none;
-    border-top:1px solid rgba(138,106,163,0.18);
+    display:flex;
+    flex-direction:column;
+    gap:14px;
+    width:100%;
+    margin:28px 0 0;
+    padding:24px 0 0;
+    border-top:1px solid rgba(212,175,106,0.28);
     text-align:left;
   }
   .rsvp-aside .details-row::before{
-    content:'Celebration details'; grid-column:1 / -1;
-    margin-bottom:2px; color:var(--plum); font-family:var(--font-ui);
-    font-size:9px; font-weight:700; letter-spacing:0.16em; text-transform:uppercase;
+    content:'Celebration Details';
+    margin-bottom:4px;
+    color:var(--plum);
+    font-family:var(--font-ui);
+    font-size:10px;
+    font-weight:700;
+    letter-spacing:0.18em;
+    text-transform:uppercase;
   }
   .rsvp-aside .detail-chip{
-    min-width:0; min-height:58px; gap:8px; padding:10px 9px; border-radius:13px;
-    align-items:flex-start; font-size:11px; line-height:1.2;
-    background:rgba(255,255,255,0.78);
-    border-color:rgba(138,106,163,0.18);
-    box-shadow:0 7px 16px -12px rgba(58,31,77,0.45);
+    display:flex;
+    align-items:center;
+    gap:16px;
+    width:100%;
+    min-height:88px;
+    padding:16px 18px;
+    background:rgba(255,255,255,0.82);
+    border:1px solid rgba(138,106,163,0.14);
+    border-radius:18px;
+    box-shadow:0 14px 30px -22px rgba(58,31,77,0.55), inset 0 1px 0 rgba(255,255,255,0.9);
+    color:var(--plum-deep);
+    transition:transform 0.2s ease, box-shadow 0.2s ease;
   }
-  .rsvp-aside .detail-chip:hover{ transform:translateY(-1px); box-shadow:0 10px 18px -12px rgba(58,31,77,0.55); }
-  .rsvp-aside .detail-chip:last-child{ grid-column:1 / -1; }
-  .rsvp-aside .detail-chip .icon{ width:28px; height:28px; border-radius:9px; flex-shrink:0; }
-  .rsvp-aside .detail-chip .icon svg{ width:14px; height:14px; }
-  .rsvp-aside .detail-chip .label{ line-height:1.2; overflow-wrap:anywhere; }
-  .rsvp-aside .detail-chip .label small{ font-size:8px; letter-spacing:0.06em; }
-  .rsvp-aside .detail-chip:last-child .label{ white-space:nowrap; }
-  .rsvp-aside .aside-note{ margin-top:28px; }
+  .rsvp-aside .detail-chip:hover{ transform:translateY(-1px); box-shadow:0 18px 34px -22px rgba(58,31,77,0.62); }
+  .rsvp-aside .detail-chip .icon{
+    width:52px; height:52px; flex:0 0 52px; border-radius:50%;
+    background:linear-gradient(145deg, #fbefd6, #f1d59a);
+    display:flex; align-items:center; justify-content:center; color:#9b711d;
+  }
+  .rsvp-aside .detail-chip .icon svg{ width:23px; height:23px; }
+  .detail-content{ display:flex; flex-direction:column; min-width:0; }
+  .detail-label{
+    font-family:var(--font-ui); font-size:9px; font-weight:700; letter-spacing:0.16em;
+    text-transform:uppercase; color:#8d7b99; margin-bottom:2px;
+  }
+  .detail-value{ font-family:var(--font-display); font-size:22px; font-weight:600; line-height:1.05; color:var(--plum-deep); }
+  .detail-secondary{ margin-top:3px; font-size:12px; line-height:1.35; color:#75677f; }
 
   /* ===== VENUE ===== */
   .venue-section{ max-width:760px; margin:44px auto 0; padding:0 20px; }
@@ -152,41 +174,59 @@
 
   .rsvp-layout{
     display:grid;
-    grid-template-columns:minmax(0, 1fr) 250px;
-    gap:18px;
+    grid-template-columns:minmax(0, 1fr) 330px;
+    gap:28px;
     align-items:stretch;
   }
   .rsvp-main{ min-width:0; }
   .rsvp-aside{
+    position:relative;
+    overflow:hidden;
     border-radius:22px;
-    background:linear-gradient(180deg, #faf4fb 0%, #f4ecf7 100%);
-    border:1px solid rgba(212,175,106,0.18);
-    padding:28px 20px;
+    background:radial-gradient(circle at 50% 3%, rgba(255,255,255,0.95), transparent 27%), linear-gradient(180deg, #fff9f8 0%, #fbf2f7 48%, #f6ecf6 100%);
+    border:1px solid rgba(212,175,106,0.25);
+    padding:34px 24px 28px;
     display:flex;
     flex-direction:column;
     justify-content:flex-start;
     text-align:center;
-    box-shadow:inset 0 1px 0 rgba(255,255,255,0.7);
+    box-shadow:0 24px 60px -34px rgba(58,31,77,0.42), inset 0 1px 0 rgba(255,255,255,0.85);
+  }
+  .rsvp-aside::before{
+    content:''; position:absolute; width:220px; height:220px; left:50%; top:-115px;
+    transform:translateX(-50%); border-radius:50%; background:rgba(238,214,226,0.32); pointer-events:none;
   }
   .aside-icon{
-    width:56px; height:56px; margin:0 auto 14px;
-    border-radius:18px;
-    background:rgba(255,255,255,0.65);
+    position:relative; z-index:1; width:64px; height:64px; margin:0 auto 14px;
+    border-radius:22px; background:rgba(255,255,255,0.88); box-shadow:0 12px 30px -20px rgba(58,31,77,0.4);
     display:flex; align-items:center; justify-content:center;
     color:var(--gold);
   }
   .aside-icon svg{ width:30px; height:30px; }
   .aside-quote{
-    font-family:var(--font-display); font-size:24px; line-height:1.22; color:var(--plum-deep);
-    margin:16px 0 0;
+    position:relative; z-index:1; max-width:260px; margin:20px auto 0;
+    font-family:var(--font-display); font-size:30px; font-weight:600; line-height:1.08;
+    letter-spacing:-0.025em; color:var(--plum-deep);
+  }
+  .aside-quote::after{
+    content:''; display:block; width:120px; margin:22px auto 0; border-bottom:1px solid rgba(212,175,106,0.55);
   }
   .aside-note{
+    max-width:230px; margin:30px auto 0;
     font-family:var(--font-display);
     font-size:18px;
+    font-weight:500;
     color:var(--plum);
-    line-height:1.35;
-    margin-top:auto;
+    line-height:1.3;
   }
+  .aside-actions{ margin-top:20px; }
+  .aside-actions a{
+    min-height:48px; display:flex; align-items:center; justify-content:center; gap:8px;
+    border-radius:14px; color:var(--plum-deep); background:rgba(255,255,255,0.7);
+    border:1px solid rgba(212,175,106,0.7); font-family:var(--font-ui); font-size:12px;
+    font-weight:700; text-decoration:none; transition:transform 0.2s ease, box-shadow 0.2s ease;
+  }
+  .aside-actions a:hover{ transform:translateY(-1px); box-shadow:0 12px 24px -18px rgba(58,31,77,0.55); }
   .field{ margin-bottom:18px; }
   .rsvp-main h2{ margin-bottom:10px; }
   .rsvp-card .sub{ margin-bottom:24px; }
@@ -332,7 +372,7 @@
     .map-frame{ height:280px; }
     .rsvp-card, .guestlist-card{ padding:26px 20px 22px; border-radius:18px; }
     .rsvp-layout{ grid-template-columns:1fr; }
-    .rsvp-aside{ order:-1; }
+    .rsvp-aside{ order:-1; padding:28px 18px 24px; }
     .attend-toggle{ flex-direction:column; }
     .attend-toggle button{ min-height:84px; }
   }
@@ -369,29 +409,7 @@
   <p>We would love to celebrate this special milestone with you. Your presence will make the day even more memorable.</p>
 </div>
 
-<section class="venue-section" aria-labelledby="venue-title">
-  <div class="venue-card">
-    <div class="venue-copy">
-      <div>
-        <div class="eyebrow">Venue</div>
-        <h2 id="venue-title">Aberdeen Court</h2>
-        <p>1403 Quezon Avenue, Quezon City</p>
-      </div>
-      <a class="map-link" href="https://www.google.com/maps/search/?api=1&amp;query=Aberdeen%20Court%201403%20Quezon%20Avenue%20Quezon%20City" target="_blank" rel="noopener noreferrer">Open in Google Maps &rarr;</a>
-    </div>
-    <div class="map-frame">
-      <iframe
-        title="Map showing Aberdeen Court in Quezon City"
-        src="https://www.google.com/maps?q=Aberdeen%20Court%201403%20Quezon%20Avenue%20Quezon%20City&amp;output=embed"
-        loading="lazy"
-        referrerpolicy="no-referrer-when-downgrade"
-        allowfullscreen>
-      </iframe>
-    </div>
-  </div>
-</section>
-
-<div class="rsvp-section">
+<div class="rsvp-section" id="rsvp">
   <div class="rsvp-card">
     <div class="rsvp-layout">
       <div class="rsvp-main">
@@ -454,26 +472,63 @@
             <div class="icon">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="3"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
             </div>
-            <div class="label"><small>Date</small>Saturday<br>September 26, 2026</div>
+            <div class="detail-content">
+              <span class="detail-label">Date</span>
+              <span class="detail-value">Saturday,</span>
+              <span class="detail-secondary">September 26, 2026</span>
+            </div>
           </div>
           <div class="detail-chip">
             <div class="icon">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
             </div>
-            <div class="label"><small>Time</small>5:30 PM<br>Program starts</div>
+            <div class="detail-content">
+              <span class="detail-label">Time</span>
+              <span class="detail-value">5:30 PM</span>
+              <span class="detail-secondary">Program starts</span>
+            </div>
           </div>
           <div class="detail-chip">
             <div class="icon">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 12-9 12s-9-5-9-12a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
             </div>
-            <div class="label"><small>Venue</small>Aberdeen Court<br>1403 Quezon Avenue, QC</div>
+            <div class="detail-content">
+              <span class="detail-label">Venue</span>
+              <span class="detail-value">Aberdeen Court</span>
+              <span class="detail-secondary">1403 Quezon Avenue, QC</span>
+            </div>
           </div>
+        </div>
+        <div class="aside-actions">
+          <a href="#venue-section">View Map <span aria-hidden="true">&rarr;</span></a>
         </div>
         <p class="aside-note">Thank you for being part of this special milestone!</p>
       </aside>
     </div>
   </div>
 </div>
+
+<section class="venue-section" id="venue-section" aria-labelledby="venue-title">
+  <div class="venue-card">
+    <div class="venue-copy">
+      <div>
+        <div class="eyebrow">Venue</div>
+        <h2 id="venue-title">Aberdeen Court</h2>
+        <p>1403 Quezon Avenue, Quezon City</p>
+      </div>
+      <a class="map-link" href="#venue-section">View Map &rarr;</a>
+    </div>
+    <div class="map-frame">
+      <iframe
+        title="Map showing Aberdeen Court in Quezon City"
+        src="https://www.google.com/maps?q=Aberdeen%20Court%201403%20Quezon%20Avenue%20Quezon%20City&amp;output=embed"
+        loading="lazy"
+        referrerpolicy="no-referrer-when-downgrade"
+        allowfullscreen>
+      </iframe>
+    </div>
+  </div>
+</section>
 
 <div class="guestlist-section">
   <div class="guestlist-card">
