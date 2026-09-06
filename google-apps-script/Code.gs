@@ -45,11 +45,17 @@ function doPost(event) {
     const partySize = attending === 'yes' ? Math.min(Math.max(Number(params.partySize) || 1, 1), 20) : 0;
     const familyNames = attending === 'yes' ? clean_(params.familyNames, 500) : '';
     const notes = clean_(params.notes, 1000);
+    const requestId = clean_(params.requestId, 100);
 
     if (!name) throw new Error('A guest name is required.');
     if (!attending) throw new Error('Attendance selection is required.');
 
+    const requestCache = CacheService.getScriptCache();
+    const cacheKey = requestId ? 'rsvp:' + requestId : '';
+    if (cacheKey && requestCache.get(cacheKey)) return json_({ ok: true, duplicate: true });
+
     getResponseSheet_().appendRow([new Date(), name, attending, partySize, familyNames, notes]);
+    if (cacheKey) requestCache.put(cacheKey, 'saved', 21600);
     return json_({ ok: true });
   } catch (error) {
     return json_({ ok: false, error: error.message });

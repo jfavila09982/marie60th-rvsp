@@ -562,6 +562,7 @@
   const totalBadge = document.getElementById('total-count-badge');
 
   let attending = null;
+  let isSubmitting = false;
   attendBtns.forEach(btn=>{
     btn.addEventListener('click', ()=>{
       attending = btn.dataset.value;
@@ -767,14 +768,17 @@
 
   form.addEventListener('submit', async (e)=>{
     e.preventDefault();
+    if(isSubmitting) return;
     const name = nameInput.value.trim();
     if(!name){ showMsg('Please enter your name.', 'error'); return; }
     if(!attending){ showMsg('Please let us know if you can make it.', 'error'); return; }
 
+    isSubmitting = true;
     submitBtn.disabled = true;
     submitBtn.textContent = 'Sending...';
 
     const record = {
+      requestId: (window.crypto && window.crypto.randomUUID) ? window.crypto.randomUUID() : 'rsvp-' + Date.now() + '-' + Math.random().toString(36).slice(2),
       name,
       attending,
       partySize: attending === 'yes' ? 1 + [...document.querySelectorAll('.guest-name-input')].filter(input=>input.value.trim()).length : 0,
@@ -797,6 +801,7 @@
     }catch(err){
       showMsg(apiConnected ? "Something went wrong sending your RSVP. Please try again." : "The Google Sheet connection still needs to be configured.", 'error');
     }finally{
+      isSubmitting = false;
       submitBtn.disabled = false;
       submitBtn.textContent = 'Send My Response';
     }
