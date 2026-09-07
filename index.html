@@ -10,7 +10,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,600&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
 
 <style>
-  :root{
+  :root{  
     --plum-deep:#3a1f4d;
     --plum:#5b3470;
     --plum-light:#8a6aa3;
@@ -534,7 +534,7 @@
   <div class="guestlist-card">
     <div class="guestlist-head">
       <h3 class="serif-display">Responses So Far</h3>
-      <div class="count-badge" id="total-count-badge">0 responses</div>
+      <div class="count-badge" id="total-count-badge">0 guests</div>
     </div>
     <div id="guest-list-body">
       <div class="loader"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
@@ -602,6 +602,20 @@
     return div.innerHTML;
   }
 
+  let confirmedGuestTotal = 0;
+
+  function attendingGuestCount(entry){
+    if(entry.attending !== 'yes') return 0;
+    const partySize = Number(entry.partySize);
+    if(Number.isInteger(partySize) && partySize > 0) return partySize;
+    return 1 + String(entry.familyNames || '').split(',').filter(name=>name.trim()).length;
+  }
+
+  function updateGuestTotal(total){
+    confirmedGuestTotal = total;
+    totalBadge.textContent = total + (total === 1 ? ' guest' : ' guests');
+  }
+
   async function loadGuests(){
     if(!storageOk){
       guestListBody.innerHTML = '<div class="empty-state">Guest list preview isn\'t available in this view, but your RSVP will still be recorded when hosted.</div>';
@@ -612,7 +626,7 @@
       const keys = (listResult && listResult.keys) ? listResult.keys : [];
       if(keys.length === 0){
         guestListBody.innerHTML = '<div class="empty-state"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>Be the first to RSVP!</div>';
-        totalBadge.textContent = '0 confirmed';
+        updateGuestTotal(0);
         return;
       }
       const entries = [];
@@ -624,10 +638,8 @@
       }
       entries.sort((a,b)=> (b.timestamp||0) - (a.timestamp||0));
 
-      let confirmedTotal = 0;
       const rows = entries.map(e=>{
         const attendingYes = e.attending === 'yes';
-        if(attendingYes) confirmedTotal += (e.partySize || 1);
         const familyHtml = (attendingYes && e.familyNames) ? `<div class="guest-family">with ${escapeHtml(e.familyNames)}</div>` : '';
         return `
           <div class="guest-row">
@@ -640,7 +652,7 @@
           </div>`;
       }).join('');
       guestListBody.innerHTML = rows;
-      totalBadge.textContent = confirmedTotal + ' confirmed';
+      updateGuestTotal(entries.reduce((total, entry)=>total + attendingGuestCount(entry), 0));
     }catch(err){
       guestListBody.innerHTML = '<div class="empty-state">Couldn\'t load the guest list right now.</div>';
     }
@@ -658,7 +670,7 @@
       const entries = Array.isArray(result.guests) ? result.guests : [];
       if(entries.length === 0){
         guestListBody.innerHTML = '<div class="empty-state">Be the first to RSVP!</div>';
-        totalBadge.textContent = '0 responses';
+        updateGuestTotal(0);
         return;
       }
       guestListBody.innerHTML = entries.map(entry=>{
@@ -674,7 +686,7 @@
           </div>
         </div>`;
       }).join('');
-      totalBadge.textContent = entries.length + (entries.length === 1 ? ' response' : ' responses');
+      updateGuestTotal(entries.reduce((total, entry)=>total + attendingGuestCount(entry), 0));
     }catch(err){
       if(!guestListBody.querySelector('.guest-row')){
         guestListBody.innerHTML = '<div class="empty-state">Couldn\'t load the guest list right now. Please refresh shortly.</div>';
@@ -762,8 +774,7 @@
       </div>`;
     if(emptyState) guestListBody.innerHTML = '';
     guestListBody.prepend(row);
-    const responseCount = guestListBody.querySelectorAll('.guest-row').length;
-    totalBadge.textContent = responseCount + (responseCount === 1 ? ' response' : ' responses');
+    updateGuestTotal(confirmedGuestTotal + attendingGuestCount(record));
   }
 
   form.addEventListener('submit', async (e)=>{
