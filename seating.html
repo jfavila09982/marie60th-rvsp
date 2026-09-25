@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Marilyn's 60th Birthday · Seating Plan</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,600&family=Manrope:wght@400;500;600;700&display=swap"
+    rel="stylesheet">
+  <style>
+    :root {
+      --plum-deep: #3a1f4d;
+      --plum: #5b3470;
+      --plum-light: #8a6aa3;
+      --lavender: #efe6f4;
+      --gold: #d4af6a;
+      --gold-light: #f0d9a0;
+      --cream: #faf6f0;
+      --ink: #2c1a38;
+      --ui: 'Manrope', Arial, sans-serif;
+      --display: 'Cormorant Garamond', Georgia, serif
+    }
+
+    * {
+      box-sizing: border-box
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      color: var(--ink);
+      font-family: var(--ui);
+      background: linear-gradient(180deg, #efe6f4, #faf6f0);
+      padding: 24px 18px 48px
+    }
+
+    .wrap {
+      max-width: 1080px;
+      margin: auto
+    }
+
+    .brand {
+      text-align: center;
+      margin: 0 0 28px
+    }
+
+    .brand h1 {
+      margin: 0;
+      color: var(--plum-deep);
+      font: 600 42px/1 var(--display);
+      font-style: italic
+    }
+
+    .brand p {
+      margin: 9px 0 0;
+      color: var(--plum);
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: .2em;
+      text-transform: uppercase
+    }
+
+    .card {
+      background: #fff;
+      border: 1px solid rgba(212, 175, 106, .3);
+      border-radius: 22px;
+      box-shadow: 0 22px 54px -28px rgba(58, 31, 77, .35);
+      padding: 26px
+    }
+
+    .intro {
+      text-align: center;
+      margin-bottom: 24px
+    }
+
+    .intro .eyebrow {
+      color: var(--plum);
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: .16em;
+      text-transform: uppercase
+    }
+
+    .intro h2 {
+      margin: 4px 0 8px;
+      color: var(--plum-deep);
+      font: 600 34px/1.05 var(--display)
+    }
+
+    .intro p {
+      margin: 0;
+      color: #7a6a84;
+      font-size: 14px
+    }
+
+    .tools {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 14px;
+      align-items: end;
+      margin-bottom: 26px
+    }
+
+    .field label {
+      display: block;
+      color: var(--plum);
+      font-size: 12px;
+      font-weight: 700;
+      margin-bottom: 7px
+    }
+
+    .field textarea {
+      display: block;
+      width: 100%;
+      min-height: 76px;
+      resize: vertical;
+      border: 1.5px solid #e6d9ee;
+      border-radius: 12px;
+      padding: 12px 14px;
+      background: #fdfbfb;
+      color: var(--ink);
+      font: 14px/1.5 var(--ui)
+    }
+
+    textarea:focus,
+    input:focus {
+      outline: none;
+      border-color: var(--gold);
+      box-shadow: 0 0 0 3px rgba(212, 175, 106, .18)
+    }
+
+    .actions {
+      display: flex;
+      gap: 8px
+    }
+
+    .btn {
+      border: 0;
+      border-radius: 12px;
+      padding: 12px 16px;
+      font: 700 13px var(--ui);
+      cursor: pointer
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #6b3f85, #8a5aa8);
+      color: #fff
+    }
+
+    .btn-secondary {
+      background: #f3eaf7;
+      color: var(--plum)
+    }
+
+    .status {
+      margin: 0 0 20px;
+      color: #8a7a94;
+      font-size: 12px;
+      text-align: right
+    }
+
+    .tables {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 16px
+    }
+
+    .table-card {
+      border: 1px solid #e6d9ee;
+      border-radius: 17px;
+      padding: 16px;
+      background: linear-gradient(145deg, #fff, #fcf8fd)
+    }
+
+    .table-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 12px
+    }
+
+    .table-head h3 {
+      margin: 0;
+      color: var(--plum-deep);
+      font: 600 25px/1 var(--display)
+    }
+
+    .badge {
+      border-radius: 99px;
+      padding: 5px 9px;
+      background: linear-gradient(135deg, var(--gold-light), var(--gold));
+      color: #5c3d13;
+      font-size: 10px;
+      font-weight: 700
+    }
+
+    .seat {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 8px
+    }
+
+    .seat-number {
+      width: 23px;
+      color: #a394ac;
+      font-size: 11px;
+      text-align: right
+    }
+
+    .seat input {
+      width: 100%;
+      min-width: 0;
+      border: 1.5px solid #eee5f3;
+      border-radius: 9px;
+      padding: 8px 9px;
+      color: var(--ink);
+      background: #fff;
+      font: 13px var(--ui)
+    }
+
+    footer {
+      text-align: center;
+      margin-top: 26px;
+      color: #a394ac;
+      font-size: 12px
+    }
+
+    @media(max-width:800px) {
+      .tables {
+        grid-template-columns: repeat(2, minmax(0, 1fr))
+      }
+    }
+
+    @media(max-width:560px) {
+      body {
+        padding: 18px 12px 36px
+      }
+
+      .card {
+        padding: 18px 14px;
+        border-radius: 18px
+      }
+
+      .brand h1 {
+        font-size: 35px
+      }
+
+      .tools {
+        grid-template-columns: 1fr
+      }
+
+      .actions {
+        justify-content: stretch
+      }
+
+      .actions .btn {
+        flex: 1
+      }
+
+      .tables {
+        grid-template-columns: 1fr
+      }
+
+      .status {
+        text-align: left
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <main class="wrap">
+    <header class="brand">
+      <h1>Marilyn C. Favila</h1>
+      <p>Sixty · 2026</p>
+    </header>
+    <section class="card">
+      <div class="intro">
+        <div class="eyebrow">Celebration Seating Plan</div>
+        <h2>Guest Table Assignments</h2>
+        <p>Enter names directly into the seats, or paste a list below to fill them in order.</p>
+      </div>
+      <div class="tools">
+        <div class="field"><label for="name-list">Guest list · one name per line</label><textarea id="name-list"
+            placeholder="e.g. Neil Castillo&#10;Maria Santos&#10;..." aria-label="Guest list"></textarea></div>
+        <div class="actions"><button class="btn btn-primary" id="fill-btn" type="button">Fill seats</button><button
+            class="btn btn-secondary" id="clear-btn" type="button">Clear</button></div>
+      </div>
+      <p class="status" id="status">0 of 110 seats filled · saved automatically</p>
+      <div class="tables" id="tables"></div>
+    </section>
+    <footer>Made with love for Marilyn's 60th</footer>
+  </main>
+  <script>
+    const totalTables = 11, seatsPerTable = 10, storageKey = 'marilyn-60th-seating-plan';
+    const sheetsApiUrl = 'https://script.google.com/macros/s/AKfycbwH1RAhVV-kseIONZk4r4UOpGAqAM2CnJUlvIPAwJeM17lPMNuTdVyN7Y2sDGeaHNX9/exec';
+    const tables = document.getElementById('tables'), list = document.getElementById('name-list'), status = document.getElementById('status');
+    const saved = JSON.parse(localStorage.getItem(storageKey) || '[]');
+    for (let table = 1; table <= totalTables; table++) {
+      const card = document.createElement('section'); card.className = 'table-card';
+      card.innerHTML = '<div class="table-head"><h3>Table ' + table + '</h3><span class="badge">10 seats</span></div>';
+      for (let seat = 1; seat <= seatsPerTable; seat++) {
+        const row = document.createElement('label'); row.className = 'seat'; row.innerHTML = '<span class="seat-number">' + seat + '</span><input type="text" maxlength="80" placeholder="Seat ' + seat + '" aria-label="Table ' + table + ', seat ' + seat + '">';
+        const input = row.querySelector('input'); input.value = saved[(table - 1) * seatsPerTable + seat - 1] || ''; input.addEventListener('input', save); card.appendChild(row);
+      } tables.appendChild(card);
+    }
+    function inputs() { return [...document.querySelectorAll('.seat input')] }
+    let saveTimer;
+    function save() { const names = inputs().map(input => input.value.trim()); localStorage.setItem(storageKey, JSON.stringify(names)); const filled = names.filter(Boolean).length; status.textContent = filled + ' of 110 seats filled · saving…'; clearTimeout(saveTimer); saveTimer = setTimeout(() => saveToSheet(names), 500) }
+    function saveToSheet(names) { const frameName = 'seating-save-' + Date.now(), frame = document.createElement('iframe'); frame.name = frameName; frame.style.display = 'none'; document.body.appendChild(frame); const form = document.createElement('form'); form.method = 'POST'; form.action = sheetsApiUrl; form.target = frameName; form.style.display = 'none'; const action = document.createElement('input'); action.name = 'action'; action.value = 'saveSeating'; form.appendChild(action); names.forEach((name, i) => { const input = document.createElement('input'); input.name = 'seat' + i; input.value = name; form.appendChild(input) }); document.body.appendChild(form); form.submit(); status.textContent = names.filter(Boolean).length + ' of 110 seats filled · saved to Seating Plan'; setTimeout(() => { form.remove(); frame.remove() }, 1500) }
+    document.getElementById('fill-btn').addEventListener('click', () => { const names = list.value.split(/\r?\n/).map(name => name.trim()).filter(Boolean); inputs().forEach((input, i) => input.value = names[i] || ''); save() });
+    document.getElementById('clear-btn').addEventListener('click', () => { if (confirm('Clear all table assignments?')) { inputs().forEach(input => input.value = ''); list.value = ''; save() } }); save();
+  </script>
+</body>
+
+</html>

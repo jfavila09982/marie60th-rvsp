@@ -542,7 +542,7 @@
   </div>
 </div>
 
-<footer>Made with love for Marilyn's 60th</footer>
+<footer>Made with love for Marilyn's 60th · <a href="seating.html">Open seating plan</a></footer>
 
 <script>
 (function(){
@@ -570,7 +570,7 @@
       btn.classList.add('selected', attending === 'yes' ? 'yes' : 'no');
       const showParty = attending === 'yes';
       guestsField.style.display = showParty ? 'block' : 'none';
-    });
+    }); 
   });
 
   function addGuestField(){

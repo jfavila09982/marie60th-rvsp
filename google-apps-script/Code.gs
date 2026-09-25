@@ -1,5 +1,8 @@
 const SHEET_NAME = 'Sheet1';
 const HEADERS = ['Timestamp', 'Name', 'Attending', 'Party Size', 'Family Members', 'Notes'];
+const SEATING_SHEET_NAME = 'Seating Plan';
+const SEATING_TABLES = 11;
+const SEATING_SEATS = 10;
 
 function setup() {
   const sheet = getResponseSheet_();
@@ -40,6 +43,7 @@ function doPost(event) {
   try {
     lock.waitLock(10000);
     const params = event && event.parameter ? event.parameter : {};
+    if (params.action === 'saveSeating') return saveSeating_(params);
     const name = clean_(params.name, 80);
     const attending = params.attending === 'yes' ? 'yes' : params.attending === 'no' ? 'no' : '';
     const partySize = attending === 'yes' ? Math.min(Math.max(Number(params.partySize) || 1, 1), 20) : 0;
@@ -64,6 +68,19 @@ function doPost(event) {
   }
 }
 
+function saveSeating_(params) {
+  const sheet = getSeatingSheet_();
+  const rows = [];
+  for (let table = 1; table <= SEATING_TABLES; table++) {
+    for (let seat = 1; seat <= SEATING_SEATS; seat++) {
+      const index = (table - 1) * SEATING_SEATS + seat - 1;
+      rows.push([table, seat, clean_(params['seat' + index], 80)]);
+    }
+  }
+  sheet.getRange(2, 1, rows.length, 3).setValues(rows);
+  return json_({ ok: true, saved: true });
+}
+
 function getResponseSheet_() {
   const spreadsheet = SpreadsheetApp.getActiveSpreadsheet();
   if (!spreadsheet) {
@@ -77,6 +94,19 @@ function getResponseSheet_() {
     sheet.setFrozenRows(1);
   } else if (sheet.getRange(1, 6).getDisplayValue() !== HEADERS[5]) {
     sheet.getRange(1, 6).setValue(HEADERS[5]).setFontWeight('bold');
+  }
+  return sheet;
+}
+
+function getSeatingSheet_() {
+  const spreadsheet = SpreadsheetApp.getActiveSpreadsheet();
+  if (!spreadsheet) throw new Error('Open this project from the spreadsheet using Extensions > Apps Script.');
+  let sheet = spreadsheet.getSheetByName(SEATING_SHEET_NAME);
+  if (!sheet) sheet = spreadsheet.insertSheet(SEATING_SHEET_NAME);
+  const headers = ['Table', 'Seat', 'Guest Name'];
+  if (sheet.getLastRow() === 0) {
+    sheet.getRange(1, 1, 1, headers.length).setValues([headers]).setFontWeight('bold');
+    sheet.setFrozenRows(1);
   }
   return sheet;
 }
