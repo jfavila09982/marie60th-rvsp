@@ -35,6 +35,9 @@
   }
   .serif-display{ font-family:var(--font-display); letter-spacing:-0.025em; }
   a{ color:inherit; }
+  .site-nav{display:flex;justify-content:center;gap:8px;margin:0 auto 22px;padding:0 18px;flex-wrap:wrap}
+  .site-nav a{padding:10px 16px;border-radius:99px;color:var(--plum);background:rgba(255,255,255,.72);border:1px solid rgba(138,106,163,.2);font-size:12px;font-weight:700;text-decoration:none}
+  .site-nav a.active,.site-nav a:hover{color:#fff;background:var(--plum)}
 
   /* ===== HERO / INVITATION ===== */
   .invite-wrap{
@@ -392,6 +395,11 @@
 </style>
 </head>
 <body>
+
+<nav class="site-nav" aria-label="Main navigation">
+  <a href="index.html" class="active" aria-current="page">RSVP &amp; Guest List</a>
+  <a href="seating.html">Seating Plan</a>
+</nav>
 
 <div class="invite-wrap">
   <div class="event-mark" aria-label="Marilyn C. Favila's sixtieth birthday celebration, 2026">

@@ -13,6 +13,9 @@ function setup() {
 
 function doGet(event) {
   try {
+    if (event && event.parameter && event.parameter.action === 'getSeating') {
+      return output_({ ok: true, seating: getSeating_() }, event);
+    }
     const sheet = getResponseSheet_();
     const lastRow = sheet.getLastRow();
     if (lastRow < 2) return output_({ ok: true, guests: [] }, event);
@@ -36,6 +39,13 @@ function doGet(event) {
   } catch (error) {
     return output_({ ok: false, error: error.message }, event);
   }
+}
+
+function getSeating_() {
+  const sheet = getSeatingSheet_();
+  if (sheet.getLastRow() < 2) return [];
+  return sheet.getRange(2, 1, SEATING_TABLES * SEATING_SEATS, 3).getDisplayValues()
+    .map(function (row) { return { table: Number(row[0]), seat: Number(row[1]), name: row[2] }; });
 }
 
 function doPost(event) {

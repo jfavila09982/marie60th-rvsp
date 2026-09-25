@@ -42,6 +42,10 @@
       margin: auto
     }
 
+    .site-nav{display:flex;justify-content:center;gap:8px;margin:0 auto 24px;flex-wrap:wrap}
+    .site-nav a{padding:10px 16px;border-radius:99px;color:var(--plum);background:rgba(255,255,255,.72);border:1px solid rgba(138,106,163,.2);font-size:12px;font-weight:700;text-decoration:none}
+    .site-nav a.active,.site-nav a:hover{color:#fff;background:var(--plum)}
+
     .brand {
       text-align: center;
       margin: 0 0 28px
@@ -162,6 +166,8 @@
       text-align: right
     }
 
+    .batch-tools{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:0 0 20px;padding:14px;border:1px solid #e6d9ee;border-radius:14px;background:#fcf8fd;color:var(--plum);font-size:12px;font-weight:700}.batch-tools select{border:1px solid #e6d9ee;border-radius:9px;padding:8px;background:#fff;color:var(--ink);font:12px var(--ui)}
+
     .tables {
       display: grid;
       grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -274,6 +280,10 @@
 
 <body>
   <main class="wrap">
+    <nav class="site-nav" aria-label="Main navigation">
+      <a href="index.html">RSVP &amp; Guest List</a>
+      <a href="seating.html" class="active" aria-current="page">Seating Plan</a>
+    </nav>
     <header class="brand">
       <h1>Marilyn C. Favila</h1>
       <p>Sixty · 2026</p>
@@ -291,6 +301,7 @@
             class="btn btn-secondary" id="clear-btn" type="button">Clear</button></div>
       </div>
       <p class="status" id="status">0 of 110 seats filled · saved automatically</p>
+      <div class="batch-tools"><span>Batch action:</span><select id="from-table" aria-label="Source table"></select><button class="btn btn-secondary" id="move-btn" type="button">Move to</button><select id="to-table" aria-label="Destination table"></select><button class="btn btn-secondary" id="swap-btn" type="button">Swap tables</button></div>
       <div class="tables" id="tables"></div>
     </section>
     <footer>Made with love for Marilyn's 60th</footer>
@@ -309,11 +320,18 @@
       } tables.appendChild(card);
     }
     function inputs() { return [...document.querySelectorAll('.seat input')] }
+    function tableInputs(table) { return inputs().slice((table - 1) * seatsPerTable, table * seatsPerTable) }
     let saveTimer;
     function save() { const names = inputs().map(input => input.value.trim()); localStorage.setItem(storageKey, JSON.stringify(names)); const filled = names.filter(Boolean).length; status.textContent = filled + ' of 110 seats filled · saving…'; clearTimeout(saveTimer); saveTimer = setTimeout(() => saveToSheet(names), 500) }
     function saveToSheet(names) { const frameName = 'seating-save-' + Date.now(), frame = document.createElement('iframe'); frame.name = frameName; frame.style.display = 'none'; document.body.appendChild(frame); const form = document.createElement('form'); form.method = 'POST'; form.action = sheetsApiUrl; form.target = frameName; form.style.display = 'none'; const action = document.createElement('input'); action.name = 'action'; action.value = 'saveSeating'; form.appendChild(action); names.forEach((name, i) => { const input = document.createElement('input'); input.name = 'seat' + i; input.value = name; form.appendChild(input) }); document.body.appendChild(form); form.submit(); status.textContent = names.filter(Boolean).length + ' of 110 seats filled · saved to Seating Plan'; setTimeout(() => { form.remove(); frame.remove() }, 1500) }
+    function setTables() { const from = Number(document.getElementById('from-table').value), to = Number(document.getElementById('to-table').value); return [from, to] }
+    for(let table=1; table<=totalTables; table++){ document.getElementById('from-table').insertAdjacentHTML('beforeend','<option value="'+table+'">Table '+table+'</option>'); document.getElementById('to-table').insertAdjacentHTML('beforeend','<option value="'+table+'">Table '+table+'</option>') }
+    document.getElementById('move-btn').addEventListener('click',()=>{const [from,to]=setTables();if(from===to)return;tableInputs(to).forEach((input,i)=>input.value=tableInputs(from)[i].value);tableInputs(from).forEach(input=>input.value='');save()});
+    document.getElementById('swap-btn').addEventListener('click',()=>{const [from,to]=setTables();if(from===to)return;const a=tableInputs(from).map(input=>input.value),b=tableInputs(to).map(input=>input.value);tableInputs(from).forEach((input,i)=>input.value=b[i]);tableInputs(to).forEach((input,i)=>input.value=a[i]);save()});
+    function loadFromSheet(){const script=document.createElement('script');const callback='seatingCallback'+Date.now();window[callback]=result=>{if(result&&result.ok&&Array.isArray(result.seating)){result.seating.forEach(item=>{const input=tableInputs(item.table)[item.seat-1];if(input)input.value=item.name||''});saveLocalOnly();}script.remove();delete window[callback]};script.src=sheetsApiUrl+'?action=getSeating&callback='+callback;document.body.appendChild(script)}
+    function saveLocalOnly(){const names=inputs().map(input=>input.value.trim());localStorage.setItem(storageKey,JSON.stringify(names));status.textContent=names.filter(Boolean).length+' of 110 seats filled · loaded from Seating Plan'}
     document.getElementById('fill-btn').addEventListener('click', () => { const names = list.value.split(/\r?\n/).map(name => name.trim()).filter(Boolean); inputs().forEach((input, i) => input.value = names[i] || ''); save() });
-    document.getElementById('clear-btn').addEventListener('click', () => { if (confirm('Clear all table assignments?')) { inputs().forEach(input => input.value = ''); list.value = ''; save() } }); save();
+    document.getElementById('clear-btn').addEventListener('click', () => { if (confirm('Clear all table assignments?')) { inputs().forEach(input => input.value = ''); list.value = ''; save() } }); saveLocalOnly(); loadFromSheet();
   </script>
 </body>
 
